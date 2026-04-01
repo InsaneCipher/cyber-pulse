@@ -4,877 +4,441 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CyberPulse</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #080c0f;
-      --surface: #0d1117;
-      --surface2: #111820;
-      --border: #1e2d3d;
-      --red: #ff3c3c;
-      --red-dim: #c02828;
-      --green: #00ff88;
-      --green-dim: #00c066;
-      --text: #c9d1d9;
-      --text-dim: #6e7c8a;
-      --mono: 'Share Tech Mono', monospace;
-      --sans: 'Rajdhani', sans-serif;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      font-size: 16px;
-      min-height: 100vh;
-      overflow-x: hidden;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f0f0f;
+      color: #f1f1f1;
     }
 
-    /* Scanline overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.03) 2px,
-        rgba(0,0,0,0.03) 4px
-      );
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* Grid background */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,60,60,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,60,60,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-      z-index: 0;
+    a {
+      color: #f1f1f1;
+      text-decoration: none;
     }
 
     .container {
-      max-width: 1300px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 2em;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Header */
-    header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 3em 0 2em;
-      position: relative;
-    }
-
-    .logo-row {
-      display: flex;
-      align-items: center;
-      gap: 0.6em;
-    }
-
-    .logo-icon {
-      width: 40px;
-      height: 40px;
-      border: 2px solid var(--red);
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2em;
-      color: var(--red);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(255,60,60,0.4); }
-      50% { box-shadow: 0 0 0 8px rgba(255,60,60,0); }
     }
 
     h1 {
-      font-family: var(--mono);
-      font-size: 2.4em;
-      color: var(--red);
-      letter-spacing: 0.1em;
-      text-shadow: 0 0 20px rgba(255,60,60,0.4);
-    }
-
-    .subtitle {
-      font-family: var(--mono);
-      font-size: 0.8em;
-      color: var(--text-dim);
-      margin-top: 0.6em;
-      letter-spacing: 0.05em;
-    }
-
-    .status-bar {
-      display: flex;
-      gap: 2em;
-      margin-top: 1.2em;
-      font-family: var(--mono);
-      font-size: 0.75em;
-      color: var(--text-dim);
-    }
-
-    .status-item {
-      display: flex;
-      align-items: center;
-      gap: 0.4em;
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 6px var(--green);
-      animation: blink 1.5s ease-in-out infinite;
-    }
-
-    .status-dot.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    /* Search panel */
-    .search-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2em;
-      margin-bottom: 2em;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .search-panel::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--red), transparent);
-    }
-
-    .panel-label {
-      font-family: var(--mono);
-      font-size: 0.7em;
-      color: var(--red);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 1.2em;
-    }
-
-    .search-row {
-      display: flex;
-      gap: 0.8em;
-      margin-bottom: 0.8em;
-    }
-
-    .search-input-wrap {
-      flex: 1;
-      position: relative;
-    }
-
-    .search-input-wrap::before {
-      content: '>';
-      position: absolute;
-      left: 1em;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: var(--mono);
-      color: var(--red);
-      font-size: 0.9em;
-      pointer-events: none;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 0.8em 1em 0.8em 2.2em;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 0.9em;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    input[type="text"]:focus {
-      border-color: var(--red);
-      box-shadow: 0 0 0 2px rgba(255,60,60,0.1);
-    }
-
-    input[type="text"]::placeholder { color: var(--text-dim); }
-
-    .hint {
-      font-family: var(--mono);
-      font-size: 0.72em;
-      color: var(--text-dim);
-      margin-bottom: 1.5em;
-    }
-
-    .hint code {
-      color: var(--green);
-      background: rgba(0,255,136,0.08);
-      padding: 0.1em 0.3em;
-      border-radius: 3px;
-    }
-
-    /* Source groups */
-    .sources-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1em;
-    }
-
-    .sources-toggle {
-      font-family: var(--mono);
-      font-size: 0.72em;
-      color: var(--text-dim);
-      cursor: pointer;
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-      padding: 0.4em 0.8em;
-      border-radius: 4px;
-      transition: all 0.2s;
-    }
-
-    .sources-toggle:hover {
-      border-color: var(--red);
-      color: var(--red);
-      background: rgba(255,60,60,0.05);
-    }
-
-    .source-groups-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5em;
-    }
-
-    .source-group-block {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1em;
-    }
-
-    .source-group-title {
-      font-family: var(--mono);
-      font-size: 0.72em;
-      color: var(--red);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0.8em;
-      padding-bottom: 0.5em;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .source-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4em;
-    }
-
-    .source-label {
-      display: flex;
-      align-items: center;
-      gap: 0.6em;
-      font-size: 0.88em;
-      cursor: pointer;
-      padding: 0.35em 0.5em;
-      border-radius: 4px;
-      transition: background 0.15s;
-      border: 1px solid transparent;
-    }
-
-    .source-label:hover { background: rgba(255,60,60,0.05); }
-
-    .source-label input[type="checkbox"] {
-      width: 14px;
-      height: 14px;
-      accent-color: var(--red);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .source-label.checked {
-      background: rgba(0,255,136,0.06);
-      border-color: rgba(0,255,136,0.2);
-      color: var(--green);
-    }
-
-    /* Buttons */
-    .btn {
-      padding: 0.75em 1.5em;
-      border: none;
-      border-radius: 4px;
-      font-family: var(--mono);
-      font-size: 0.85em;
-      cursor: pointer;
-      transition: all 0.2s;
-      letter-spacing: 0.05em;
-    }
-
-    .btn-primary {
-      background: var(--red);
-      color: white;
-      width: 100%;
-      margin-top: 1.5em;
-      font-size: 1em;
-      padding: 1em;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-primary::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
-      transform: translateX(-100%);
-      transition: transform 0.4s;
-    }
-
-    .btn-primary:hover::after { transform: translateX(100%); }
-    .btn-primary:hover { background: var(--red-dim); }
-    .btn-primary:disabled { background: #333; color: var(--text-dim); cursor: not-allowed; }
-    .btn-primary:disabled::after { display: none; }
-
-    /* Info dropdown */
-    .info-dropdown {
-      margin-top: 1.5em;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .info-dropdown summary {
-      padding: 0.8em 1.2em;
-      font-family: var(--mono);
-      font-size: 0.8em;
-      color: var(--text-dim);
-      cursor: pointer;
-      background: var(--surface2);
-      letter-spacing: 0.05em;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-    }
-
-    .info-dropdown summary::-webkit-details-marker { display: none; }
-    .info-dropdown summary::before { content: '▶'; font-size: 0.7em; transition: transform 0.2s; }
-    .info-dropdown[open] summary::before { transform: rotate(90deg); }
-    .info-dropdown summary:hover { color: var(--red); }
-
-    .info-content {
-      padding: 1.5em;
-      background: var(--surface);
-      font-size: 0.88em;
-      line-height: 1.6;
-    }
-
-    .info-content h3 {
-      color: var(--red);
-      font-family: var(--mono);
-      font-size: 0.8em;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin: 1.2em 0 0.6em;
-      padding-bottom: 0.3em;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .info-content h3:first-child { margin-top: 0; }
-
-    .info-content ul { list-style: none; }
-
-    .info-content li {
-      padding: 0.4em 0;
-      border-bottom: 1px solid rgba(30,45,61,0.5);
-      color: var(--text-dim);
-    }
-
-    .info-content li a { color: var(--text); text-decoration: none; }
-    .info-content li a:hover { color: var(--red); }
-    .info-content li strong { color: var(--text); }
-
-    /* Loading */
-    .loading-bar {
-      display: none;
-      margin-top: 1em;
-      height: 2px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .loading-bar.active { display: block; }
-
-    .loading-bar::after {
-      content: '';
-      display: block;
-      height: 100%;
-      width: 30%;
-      background: var(--red);
-      animation: scan 1.2s ease-in-out infinite;
-      box-shadow: 0 0 10px var(--red);
-    }
-
-    @keyframes scan {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(400%); }
-    }
-
-    .loading-text {
-      display: none;
-      font-family: var(--mono);
-      font-size: 0.78em;
-      color: var(--text-dim);
-      margin-top: 0.5em;
       text-align: center;
-    }
-
-    .loading-text.active { display: block; }
-
-    /* Results header */
-    .results-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 2em 0 1em;
-      padding-bottom: 0.8em;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .results-count {
-      font-family: var(--mono);
-      font-size: 0.8em;
-      color: var(--text-dim);
-    }
-
-    .results-count span { color: var(--green); }
-
-    .results-keywords {
-      font-family: var(--mono);
-      font-size: 0.78em;
-      color: var(--text-dim);
-    }
-
-    .results-keywords em { color: var(--red); font-style: normal; }
-
-    /* Article cards */
-    .results-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.8em;
-    }
-
-    .article-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--red);
-      border-radius: 0 6px 6px 0;
-      padding: 1.2em 1.5em;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .article-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(255,60,60,0.03), transparent);
-      pointer-events: none;
-    }
-
-    .article-card:hover {
-      border-color: rgba(255,60,60,0.5);
-      background: var(--surface2);
-      transform: translateX(3px);
-    }
-
-    .card-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      color: #ff3c3c;
       margin-bottom: 0.5em;
     }
 
-    .card-source {
-      font-family: var(--mono);
-      font-size: 0.68em;
-      color: var(--red);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .subtitle {
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 2em;
+      color: #cccccc;
     }
 
-    .card-date {
-      font-family: var(--mono);
-      font-size: 0.68em;
-      color: var(--text-dim);
+    .search-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5em;
+      background: #1c1c1c;
+      padding: 2em;
+      border-radius: 10px;
     }
 
-    .card-title {
-      font-size: 1.05em;
-      font-weight: 600;
-      color: var(--text);
+    .search-input-row {
+      display: flex;
+      align-items: center;
+      gap: 1em;
+    }
+
+    .search-form input[type="text"] {
+      flex: 1;
+      padding: 0.8em;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      background: #2a2a2a;
+      color: white;
+    }
+
+    .sources label {
+      background: #292929;
+      padding: 0.5em;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .sources input {
+      margin-right: 0.5em;
+    }
+
+    .sources label:hover {
+      background: #333;
+    }
+
+    .source-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .source-group {
+      font-size: 1.2rem;
+      border-left: 4px solid #ff4d4d;
+      padding-left: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .source-grid label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    label:has(input[type="checkbox"]:checked) {
+      background-color: #4caf50;
+      color: white;
+      border-color: #4caf50;
+    }
+
+    button {
+      padding: 0.8em 1.5em;
+      font-size: 1em;
+      background: #ff3c3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover { background: #e03131; }
+
+    button.loading {
+      background-color: gray;
+      pointer-events: none;
+    }
+
+    button:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
+
+    .results {
+      margin-top: 2em;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5em;
+    }
+
+    .article-card {
+      background: #1a1a1a;
+      padding: 1em 1.5em;
+      border-left: 4px solid #ff3c3c;
+      border-radius: 6px;
+    }
+
+    .article-card a {
+      color: #ff3c3c;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 0.5em;
+    }
+
+    .article-card a:hover { text-decoration: underline; }
+
+    .dropdown-menu {
+      margin-top: 0;
+      background: #1c1c1c;
+      border-radius: 8px;
+      padding: 1em;
+      border: 1px solid #333;
+      color: #f1f1f1;
+    }
+
+    .dropdown-menu summary {
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #ff4d4d;
+    }
+
+    .dropdown-content {
+      margin-top: 1em;
+      font-size: 0.95em;
+    }
+
+    .dropdown-content h3 {
+      margin-top: 1em;
+      font-size: 1.1em;
+      color: #ff4d4d;
+    }
+
+    .dropdown-content ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .dropdown-content li {
       margin-bottom: 0.5em;
       line-height: 1.4;
     }
 
-    .card-snippet {
-      font-size: 0.88em;
-      color: var(--text-dim);
-      line-height: 1.5;
-      margin-bottom: 0.8em;
-    }
-
-    .card-link {
-      font-family: var(--mono);
-      font-size: 0.75em;
-      color: var(--red);
-      text-decoration: none;
-      letter-spacing: 0.05em;
-    }
-
-    .card-link:hover { color: white; }
-
-    /* Error */
     .error-box {
-      background: rgba(255,60,60,0.08);
-      border: 1px solid rgba(255,60,60,0.3);
+      background: rgba(255,60,60,0.1);
+      border: 1px solid #ff3c3c;
       border-radius: 6px;
-      padding: 1em 1.5em;
-      font-family: var(--mono);
-      font-size: 0.85em;
-      color: var(--red);
-      margin-top: 1em;
+      padding: 0.8em 1.2em;
+      color: #ff3c3c;
+      font-size: 0.9em;
     }
-
-    .empty-state {
-      text-align: center;
-      padding: 4em 2em;
-      font-family: var(--mono);
-      color: var(--text-dim);
-      font-size: 0.85em;
-    }
-
-    .empty-state .big { font-size: 3em; margin-bottom: 0.5em; }
   </style>
 </head>
 <body>
-<div class="container">
+  <div class="container">
+    <h1>📰 CyberPulse</h1>
+    <p class="subtitle">Track the world's most important cyber threats in one place.</p>
 
-  <header>
-    <div class="logo-row">
-      <div class="logo-icon">⬡</div>
-      <h1>CYBERPULSE</h1>
-    </div>
-    <p class="subtitle">// track the world's most important cyber threats in one place</p>
-    <div class="status-bar">
-      <div class="status-item">
-        <div class="status-dot" id="api-dot"></div>
-        <span id="api-status">connecting...</span>
+    <div class="search-form">
+      <div class="search-input-row">
+        <input type="text" id="keyword-input" placeholder="e.g. attack AI or malware finance" oninput="updateSearchBtn()">
+        <button type="button" onclick="toggleAll()">Toggle All Sources</button>
       </div>
-      <div class="status-item">
-        <div class="status-dot red"></div>
-        <span id="article-count">— articles indexed</span>
-      </div>
+
+      <p>
+        Enter your search keywords separated by commas.<br>
+        Use <code>*</code> to get <strong>all results</strong> without filtering by keyword.
+      </p>
+
+      <details class="dropdown-menu">
+        <summary><strong>📚 What Each Source Covers</strong></summary>
+        <div class="dropdown-content">
+          <h3>Mainstream News</h3>
+          <ul>
+            <li><a href="https://www.bbc.co.uk/news/technology" target="_blank"><strong>BBC</strong></a>: Global headline news, including major cybersecurity incidents and policy developments.</li>
+            <li><a href="https://edition.cnn.com/business/tech" target="_blank"><strong>CNN</strong></a>: Breaking news coverage; occasionally reports on large-scale hacks and data breaches.</li>
+            <li><a href="https://www.wired.com/category/security/" target="_blank"><strong>Wired</strong></a>: In-depth features on technology trends, major security research, and cybercrime investigations.</li>
+            <li><a href="https://arstechnica.com/information-technology/" target="_blank"><strong>Ars Technica</strong></a>: Deep dives on tech policy, vulnerabilities, and high-profile breaches.</li>
+          </ul>
+          <h3>Cybersecurity Blogs</h3>
+          <ul>
+            <li><a href="https://thehackernews.com/" target="_blank"><strong>The Hacker News</strong></a>: Timely alerts on new vulnerabilities, malware outbreaks, and hacker activity.</li>
+            <li><a href="https://threatpost.com/" target="_blank"><strong>Threatpost</strong></a>: Expert analysis on emerging threats, zero-days, and security tool reviews.</li>
+            <li><a href="https://www.securityweek.com/" target="_blank"><strong>Security Week</strong></a>: Industry news, expert interviews, and deep dives on enterprise and government attacks.</li>
+            <li><a href="https://www.cyberscoop.com/" target="_blank"><strong>CyberScoop</strong></a>: Focus on U.S. policy, nation-state operations, and law-enforcement actions.</li>
+            <li><a href="https://krebsonsecurity.com/" target="_blank"><strong>Krebs On Security</strong></a>: Investigative reporting on large data breaches, ransomware gangs, and underground markets.</li>
+            <li><a href="https://www.zerodayinitiative.com/blog" target="_blank"><strong>Zero Day Initiative Blog</strong></a>: Pre-release vulnerability advisories and technical write-ups by ZDI researchers.</li>
+            <li><a href="https://www.darkreading.com/" target="_blank"><strong>DarkReading</strong></a>: Wide-ranging coverage of cyber-defense, incident response, and security strategy.</li>
+            <li><a href="https://www.bleepingcomputer.com/" target="_blank"><strong>Bleeping Computer</strong></a>: Hands-on tutorials, malware removals, and technical vulnerability news.</li>
+            <li><a href="https://securityaffairs.com/" target="_blank"><strong>Security Affairs</strong></a>: News &amp; analysis on hacking groups, security tool developments, and threat actor tactics.</li>
+            <li><a href="https://therecord.media/" target="_blank"><strong>The Record</strong></a>: Polished, daily cybersecurity newsletter covering breaches, privacy, and policy.</li>
+            <li><a href="https://googleprojectzero.blogspot.com/" target="_blank"><strong>Google Project Zero</strong></a>: Technical disclosures of zero-day flaws by Google's elite research team.</li>
+            <li><a href="https://cloud.google.com/blog/products/identity-security" target="_blank"><strong>Google Cloud Security Blog</strong></a>: Cloud-native threat research and best practices.</li>
+            <li><a href="https://securityboulevard.com/" target="_blank"><strong>Security Boulevard</strong></a>: Aggregated industry perspectives on trends, tools, and leadership in cybersecurity.</li>
+            <li><a href="https://portswigger.net/daily-swig" target="_blank"><strong>The Daily Swig</strong></a>: News on web-app vulnerabilities and pen-testing from PortSwigger.</li>
+            <li><a href="https://www.schneier.com/" target="_blank"><strong>Schneier</strong></a>: Bruce Schneier's commentary on cryptography, policy, and global security issues.</li>
+            <li><a href="https://medium.com/realmodelabs" target="_blank"><strong>Realmode Labs</strong></a>: Vulnerability research, exploit development, and system internals.</li>
+            <li><a href="https://research.nccgroup.com/" target="_blank"><strong>NCC Group Research Blog</strong></a>: Technical write-ups, red team tools, and reverse engineering reports.</li>
+            <li><a href="https://trustedsec.com/blog/" target="_blank"><strong>TrustedSec Blog</strong></a>: Blog posts and advisories on pen-testing, malware, and threat research.</li>
+            <li><a href="https://portswigger.net/research" target="_blank"><strong>PortSwigger Research</strong></a>: Advanced security research, often web-focused, from the Burp Suite team.</li>
+          </ul>
+          <h3>Vendors &amp; Feeds</h3>
+          <ul>
+            <li><a href="https://www.crowdstrike.com/blog/" target="_blank"><strong>CrowdStrike</strong></a>: Threat intelligence and breach forensics from a leading endpoint security vendor.</li>
+            <li><a href="https://www.microsoft.com/en-us/security/blog/" target="_blank"><strong>Microsoft Security</strong></a>: Vulnerability advisories, patch notes, and cloud-security guidance.</li>
+            <li><a href="https://aws.amazon.com/security/" target="_blank"><strong>AWS Security</strong></a>: Security bulletins, compliance updates, and architectural best practices for AWS.</li>
+            <li><a href="https://www.exploit-db.com/" target="_blank"><strong>ExploitDB</strong></a>: Public archive of proof-of-concept exploits and vulnerability disclosures.</li>
+            <li><a href="https://blog.talosintelligence.com/" target="_blank"><strong>Cisco Talos Intelligence</strong></a>: In-depth threat research, IoCs, and attack telemetry.</li>
+            <li><a href="https://isc.sans.edu/" target="_blank"><strong>SANS Internet Storm Center</strong></a>: Community-driven intrusion warnings and internet "storm" analysis.</li>
+            <li><a href="https://www.zerodayinitiative.com/advisories/upcoming/" target="_blank"><strong>Zero Day Initiative: Upcoming</strong></a>: Preview of upcoming vendor advisories before public release.</li>
+            <li><a href="https://www.zerodayinitiative.com/advisories/published/" target="_blank"><strong>Zero Day Initiative: Published</strong></a>: Official, post-disclosure advisories with technical details.</li>
+            <li><a href="https://www.rapid7.com/blog/" target="_blank"><strong>Rapid7</strong></a>: Research on vulnerabilities, Metasploit updates, and cloud-security insights.</li>
+            <li><a href="https://blog.malwarebytes.com/" target="_blank"><strong>Malwarebytes</strong></a>: Malware deep dives, removal guides, and threat actor reports.</li>
+            <li><a href="https://www.kali.org/blog/" target="_blank"><strong>Kali Linux</strong></a>: Announcements, tooling updates, and tutorials for the penetration-testing distro.</li>
+            <li><a href="https://unit42.paloaltonetworks.com/" target="_blank"><strong>Palo Alto Networks</strong></a>: Unit42 threat intelligence, exploit analysis, and prevention advice.</li>
+            <li><a href="https://research.checkpoint.com/" target="_blank"><strong>Check Point Research Blog</strong></a>: Cyber-attack forensics, IoCs, and corporate security warnings.</li>
+            <li><a href="https://www.fortinet.com/blog/threat-research" target="_blank"><strong>Fortinet Blog</strong></a>: Threat landscape reports, vulnerability bulletins, and security fabric news.</li>
+            <li><a href="https://blogs.vmware.com/security/" target="_blank"><strong>VMware Security Blog</strong></a>: Virtualization-centric vulnerabilities, cloud-security updates, and patches.</li>
+            <li><a href="https://securityintelligence.com/" target="_blank"><strong>IBM X&#8209;Force</strong></a>: Global security research, data breach analytics, and emerging threat alerts.</li>
+            <li><a href="https://securelist.com/" target="_blank"><strong>Kaspersky Securelist</strong></a>: Malware, APT group analysis, and threat trend reports.</li>
+            <li><a href="https://www.welivesecurity.com/" target="_blank"><strong>ESET WeLiveSecurity</strong></a>: Vulnerability analysis, campaigns, and phishing trends.</li>
+            <li><a href="https://blog.mozilla.org/security/" target="_blank"><strong>Mozilla Security Blog</strong></a>: Firefox and Mozilla security updates and practices.</li>
+          </ul>
+          <h3>Government &amp; Law Enforcement</h3>
+          <ul>
+            <li><a href="https://www.fbi.gov/news" target="_blank"><strong>FBI Newsroom</strong></a>: Official statements and case announcements related to cybercrime investigations.</li>
+            <li><a href="https://www.europol.europa.eu/newsroom" target="_blank"><strong>Europol Newsroom</strong></a>: Europe-focused law-enforcement actions against organized cybercriminals.</li>
+            <li><a href="https://www.ncsc.gov.uk/news" target="_blank"><strong>NCSC (UK)</strong></a>: U.K. government advisories on vulnerabilities, phishing campaigns, and defense guidance.</li>
+            <li><a href="https://www.cisa.gov/news-events" target="_blank"><strong>CERT-US (CISA)</strong></a>: Alerts, vulnerability bulletins, and federal cybersecurity guidance.</li>
+            <li><a href="https://cert.europa.eu/publications" target="_blank"><strong>CERT-EU</strong></a>: European network security alerts and coordinated vulnerability disclosures.</li>
+            <li><a href="https://www.jpcert.or.jp/english/" target="_blank"><strong>CERT-Japan</strong></a>: Japanese vulnerability notices, incident reports, and threat advisories.</li>
+          </ul>
+          <h3>Community &amp; Aggregators</h3>
+          <ul>
+            <li><a href="https://risky.biz/" target="_blank"><strong>Substack – Risky Biz</strong></a>: Weekly newsletter covering current security news and expert interviews.</li>
+            <li><a href="https://darknetdiaries.com/" target="_blank"><strong>Darknet Diaries</strong></a>: True-crime podcast-style storytelling of real cyber-intrusions and investigations.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="source-container sources" id="source-groups"></div>
+
+      <button id="search-button" onclick="doSearch()" disabled>Search</button>
+      <div id="loading" style="display:none;">Searching, please wait...</div>
+      <div id="error-box"></div>
+      <div id="results-header"></div>
     </div>
-  </header>
 
-  <div class="search-panel">
-    <div class="panel-label">// search interface</div>
-
-    <div class="search-row">
-      <div class="search-input-wrap">
-        <input type="text" id="keyword-input" placeholder="ransomware, CVE, phishing..." oninput="updateSearchBtn()">
-      </div>
-    </div>
-    <p class="hint">Separate keywords with commas &nbsp;·&nbsp; Use <code>*</code> to return all results</p>
-
-    <div class="sources-header">
-      <div class="panel-label" style="margin:0">// select sources</div>
-      <button class="sources-toggle btn" onclick="toggleAll()">toggle all</button>
-    </div>
-
-    <div class="source-groups-grid" id="source-groups"></div>
-
-    <button class="btn btn-primary" id="search-btn" onclick="doSearch()" disabled>
-      EXECUTE SEARCH
-    </button>
-    <div class="loading-bar" id="loading-bar"></div>
-    <div class="loading-text" id="loading-text">// fetching intelligence feed...</div>
-
-    <div id="error-box"></div>
-
-    <details class="info-dropdown" style="margin-top:1.5em">
-      <summary>// source directory &amp; coverage</summary>
-      <div class="info-content">
-        <h3>Mainstream News</h3>
-        <ul>
-          <li><a href="https://www.bbc.co.uk/news/technology" target="_blank"><strong>BBC</strong></a>: Global headline news, including major cybersecurity incidents and policy developments.</li>
-          <li><a href="https://edition.cnn.com/business/tech" target="_blank"><strong>CNN</strong></a>: Breaking news coverage of large-scale hacks and data breaches.</li>
-          <li><a href="https://www.wired.com/category/security/" target="_blank"><strong>Wired</strong></a>: In-depth features on technology trends, major security research, and cybercrime investigations.</li>
-          <li><a href="https://arstechnica.com/information-technology/" target="_blank"><strong>Ars Technica</strong></a>: Deep dives on tech policy, vulnerabilities, and high-profile breaches.</li>
-        </ul>
-        <h3>Cybersecurity Blogs</h3>
-        <ul>
-          <li><a href="https://thehackernews.com/" target="_blank"><strong>The Hacker News</strong></a>: Timely alerts on new vulnerabilities, malware outbreaks, and hacker activity.</li>
-          <li><a href="https://threatpost.com/" target="_blank"><strong>Threatpost</strong></a>: Expert analysis on emerging threats, zero-days, and security tool reviews.</li>
-          <li><a href="https://www.securityweek.com/" target="_blank"><strong>Security Week</strong></a>: Industry news, expert interviews, and deep dives on enterprise attacks.</li>
-          <li><a href="https://www.cyberscoop.com/" target="_blank"><strong>CyberScoop</strong></a>: Focus on U.S. policy, nation-state operations, and law-enforcement actions.</li>
-          <li><a href="https://krebsonsecurity.com/" target="_blank"><strong>Krebs On Security</strong></a>: Investigative reporting on breaches, ransomware gangs, and underground markets.</li>
-          <li><a href="https://www.zerodayinitiative.com/blog" target="_blank"><strong>Zero Day Initiative Blog</strong></a>: Pre-release vulnerability advisories and technical write-ups.</li>
-          <li><a href="https://www.darkreading.com/" target="_blank"><strong>DarkReading</strong></a>: Wide-ranging coverage of cyber-defense, incident response, and security strategy.</li>
-          <li><a href="https://www.bleepingcomputer.com/" target="_blank"><strong>Bleeping Computer</strong></a>: Hands-on tutorials, malware removals, and technical vulnerability news.</li>
-          <li><a href="https://securityaffairs.com/" target="_blank"><strong>Security Affairs</strong></a>: News &amp; analysis on hacking groups, security tool developments, and threat actor tactics.</li>
-          <li><a href="https://therecord.media/" target="_blank"><strong>The Record</strong></a>: Daily cybersecurity newsletter covering breaches, privacy, and policy.</li>
-          <li><a href="https://googleprojectzero.blogspot.com/" target="_blank"><strong>Google Project Zero</strong></a>: Technical disclosures of zero-day flaws by Google's elite research team.</li>
-          <li><a href="https://cloud.google.com/blog/products/identity-security" target="_blank"><strong>Google Cloud Security Blog</strong></a>: Cloud-native threat research and best practices.</li>
-          <li><a href="https://securityboulevard.com/" target="_blank"><strong>Security Boulevard</strong></a>: Aggregated industry perspectives on trends and tools.</li>
-          <li><a href="https://portswigger.net/daily-swig" target="_blank"><strong>The Daily Swig</strong></a>: News on web-app vulnerabilities and pen-testing from PortSwigger.</li>
-          <li><a href="https://www.schneier.com/" target="_blank"><strong>Schneier</strong></a>: Bruce Schneier's commentary on cryptography, policy, and global security.</li>
-          <li><a href="https://medium.com/realmodelabs" target="_blank"><strong>Realmode Labs</strong></a>: Vulnerability research, exploit development, and system internals.</li>
-          <li><a href="https://research.nccgroup.com/" target="_blank"><strong>NCC Group Research Blog</strong></a>: Technical write-ups, red team tools, and reverse engineering reports.</li>
-          <li><a href="https://trustedsec.com/blog/" target="_blank"><strong>TrustedSec Blog</strong></a>: Pen-testing, malware, and threat research advisories.</li>
-          <li><a href="https://portswigger.net/research" target="_blank"><strong>PortSwigger Research</strong></a>: Advanced web security research from the Burp Suite team.</li>
-        </ul>
-        <h3>Vendors &amp; Feeds</h3>
-        <ul>
-          <li><a href="https://www.crowdstrike.com/blog/" target="_blank"><strong>CrowdStrike</strong></a>: Threat intelligence and breach forensics.</li>
-          <li><a href="https://www.microsoft.com/en-us/security/blog/" target="_blank"><strong>Microsoft Security</strong></a>: Vulnerability advisories, patch notes, and cloud-security guidance.</li>
-          <li><a href="https://aws.amazon.com/security/" target="_blank"><strong>AWS Security</strong></a>: Security bulletins and architectural best practices for AWS.</li>
-          <li><a href="https://www.exploit-db.com/" target="_blank"><strong>ExploitDB</strong></a>: Public archive of proof-of-concept exploits and disclosures.</li>
-          <li><a href="https://blog.talosintelligence.com/" target="_blank"><strong>Cisco Talos Intelligence</strong></a>: In-depth threat research, IoCs, and attack telemetry.</li>
-          <li><a href="https://isc.sans.edu/" target="_blank"><strong>SANS Internet Storm Center</strong></a>: Community-driven intrusion warnings and storm analysis.</li>
-          <li><a href="https://www.zerodayinitiative.com/advisories/upcoming/" target="_blank"><strong>Zero Day Initiative: Upcoming</strong></a>: Preview of upcoming vendor advisories.</li>
-          <li><a href="https://www.zerodayinitiative.com/advisories/published/" target="_blank"><strong>Zero Day Initiative: Published</strong></a>: Official post-disclosure advisories.</li>
-          <li><a href="https://www.rapid7.com/blog/" target="_blank"><strong>Rapid7</strong></a>: Research on vulnerabilities, Metasploit updates, and cloud insights.</li>
-          <li><a href="https://blog.malwarebytes.com/" target="_blank"><strong>Malwarebytes</strong></a>: Malware deep dives, removal guides, and threat actor reports.</li>
-          <li><a href="https://www.kali.org/blog/" target="_blank"><strong>Kali Linux</strong></a>: Announcements and tooling updates for the penetration-testing distro.</li>
-          <li><a href="https://unit42.paloaltonetworks.com/" target="_blank"><strong>Palo Alto Networks</strong></a>: Unit42 threat intelligence and exploit analysis.</li>
-          <li><a href="https://research.checkpoint.com/" target="_blank"><strong>Check Point Research Blog</strong></a>: Cyber-attack forensics, IoCs, and security warnings.</li>
-          <li><a href="https://www.fortinet.com/blog/threat-research" target="_blank"><strong>Fortinet Blog</strong></a>: Threat landscape reports and vulnerability bulletins.</li>
-          <li><a href="https://blogs.vmware.com/security/" target="_blank"><strong>VMware Security Blog</strong></a>: Virtualization vulnerabilities and cloud-security updates.</li>
-          <li><a href="https://securityintelligence.com/" target="_blank"><strong>IBM X‑Force</strong></a>: Global security research and data breach analytics.</li>
-          <li><a href="https://securelist.com/" target="_blank"><strong>Kaspersky Securelist</strong></a>: Malware and APT group analysis.</li>
-          <li><a href="https://www.welivesecurity.com/" target="_blank"><strong>ESET WeLiveSecurity</strong></a>: Vulnerability analysis and phishing trends.</li>
-          <li><a href="https://blog.mozilla.org/security/" target="_blank"><strong>Mozilla Security Blog</strong></a>: Firefox and Mozilla security updates.</li>
-        </ul>
-        <h3>Government &amp; Law Enforcement</h3>
-        <ul>
-          <li><a href="https://www.fbi.gov/news" target="_blank"><strong>FBI Newsroom</strong></a>: Official statements on cybercrime investigations.</li>
-          <li><a href="https://www.europol.europa.eu/newsroom" target="_blank"><strong>Europol Newsroom</strong></a>: Europe-focused law-enforcement actions against cybercriminals.</li>
-          <li><a href="https://www.ncsc.gov.uk/news" target="_blank"><strong>NCSC (UK)</strong></a>: UK government advisories on vulnerabilities and defense guidance.</li>
-          <li><a href="https://www.cisa.gov/news-events" target="_blank"><strong>CERT-US (CISA)</strong></a>: Alerts, vulnerability bulletins, and federal cybersecurity guidance.</li>
-          <li><a href="https://cert.europa.eu/publications" target="_blank"><strong>CERT-EU</strong></a>: European network security alerts and vulnerability disclosures.</li>
-          <li><a href="https://www.jpcert.or.jp/english/" target="_blank"><strong>CERT-Japan</strong></a>: Japanese vulnerability notices and threat advisories.</li>
-        </ul>
-        <h3>Community &amp; Aggregators</h3>
-        <ul>
-          <li><a href="https://risky.biz/" target="_blank"><strong>Substack – Risky Biz</strong></a>: Weekly newsletter covering current security news and expert interviews.</li>
-          <li><a href="https://darknetdiaries.com/" target="_blank"><strong>Darknet Diaries</strong></a>: True-crime storytelling of real cyber-intrusions and investigations.</li>
-        </ul>
-      </div>
-    </details>
+    <div id="results-area"></div>
   </div>
 
-  <div id="results-area"></div>
+  <script>
+    const API_BASE = "https://api.hyperionserver.uk";
 
-</div>
+    const sourceGroups = {
+      "Mainstream News": ["BBC", "CNN", "Wired", "Ars Technica"],
+      "Cybersecurity Blogs": [
+        "The Hacker News", "Threatpost", "Security Week", "CyberScoop",
+        "Krebs On Security", "Zero Day Initiative Blog", "DarkReading",
+        "Bleeping Computer", "Security Affairs", "The Record",
+        "Google Project Zero", "Google Cloud Security Blog",
+        "Security Boulevard", "The Daily Swig", "Schneier",
+        "Realmode Labs", "NCC Group Research Blog", "TrustedSec Blog",
+        "PortSwigger Research"
+      ],
+      "Vendors & Feeds": [
+        "CrowdStrike", "Microsoft Security", "AWS Security", "ExploitDB",
+        "Cisco Talos Intelligence", "SANS Internet Storm Center",
+        "Zero Day Initiative: Upcoming", "Zero Day Initiative: Published",
+        "Rapid7", "Malwarebytes", "Kali Linux", "Palo Alto Networks",
+        "Check Point Research Blog", "Fortinet Blog", "VMware Security Blog",
+        "IBM X\u2011Force", "Kaspersky Securelist", "ESET WeLiveSecurity",
+        "Mozilla Security Blog"
+      ],
+      "Government & Law Enforcement": [
+        "FBI Newsroom", "Europol Newsroom", "NCSC (UK)",
+        "CERT-US (CISA)", "CERT-EU", "CERT-Japan"
+      ],
+      "Community & Aggregators": ["Substack \u2013 Risky Biz", "Darknet Diaries"]
+    };
 
-<script>
-  const API_BASE = "https://api.hyperionserver.uk";
-
-  const sourceGroups = {
-    "Mainstream News": ["BBC", "CNN", "Wired", "Ars Technica"],
-    "Cybersecurity Blogs": [
-      "The Hacker News", "Threatpost", "Security Week", "CyberScoop",
-      "Krebs On Security", "Zero Day Initiative Blog", "DarkReading",
-      "Bleeping Computer", "Security Affairs", "The Record",
-      "Google Project Zero", "Google Cloud Security Blog",
-      "Security Boulevard", "The Daily Swig", "Schneier",
-      "Realmode Labs", "NCC Group Research Blog", "TrustedSec Blog",
-      "PortSwigger Research"
-    ],
-    "Vendors & Feeds": [
-      "CrowdStrike", "Microsoft Security", "AWS Security", "ExploitDB",
-      "Cisco Talos Intelligence", "SANS Internet Storm Center",
-      "Zero Day Initiative: Upcoming", "Zero Day Initiative: Published",
-      "Rapid7", "Malwarebytes", "Kali Linux", "Palo Alto Networks",
-      "Check Point Research Blog", "Fortinet Blog", "VMware Security Blog",
-      "IBM X\u2011Force", "Kaspersky Securelist", "ESET WeLiveSecurity",
-      "Mozilla Security Blog"
-    ],
-    "Government & Law Enforcement": [
-      "FBI Newsroom", "Europol Newsroom", "NCSC (UK)",
-      "CERT-US (CISA)", "CERT-EU", "CERT-Japan"
-    ],
-    "Community & Aggregators": ["Substack \u2013 Risky Biz", "Darknet Diaries"]
-  };
-
-  // Build source checkboxes
-  const groupsEl = document.getElementById("source-groups");
-  for (const [cat, sources] of Object.entries(sourceGroups)) {
-    const block = document.createElement("div");
-    block.className = "source-group-block";
-    block.innerHTML = `<div class="source-group-title">${cat}</div><div class="source-list" id="grp-${cat.replace(/\W/g,'-')}"></div>`;
-    groupsEl.appendChild(block);
-    const list = block.querySelector(".source-list");
-    sources.forEach(s => {
-      const label = document.createElement("label");
-      label.className = "source-label checked";
-      label.innerHTML = `<input type="checkbox" value="${s}" checked onchange="onCheckChange(this)"> ${s}`;
-      list.appendChild(label);
-    });
-  }
-
-  function onCheckChange(cb) {
-    cb.closest("label").classList.toggle("checked", cb.checked);
-    updateSearchBtn();
-  }
-
-  function toggleAll() {
-    const cbs = document.querySelectorAll(".source-label input[type=checkbox]");
-    const allChecked = [...cbs].every(c => c.checked);
-    cbs.forEach(c => {
-      c.checked = !allChecked;
-      c.closest("label").classList.toggle("checked", !allChecked);
-    });
-    updateSearchBtn();
-  }
-
-  function updateSearchBtn() {
-    const kw = document.getElementById("keyword-input").value.trim();
-    const anySource = [...document.querySelectorAll(".source-label input")].some(c => c.checked);
-    document.getElementById("search-btn").disabled = !kw || !anySource;
-  }
-
-  // Check API health on load
-  async function checkHealth() {
-    try {
-      const r = await fetch(`${API_BASE}/health`);
-      if (r.ok) {
-        document.getElementById("api-dot").style.background = "var(--green)";
-        document.getElementById("api-dot").style.boxShadow = "0 0 6px var(--green)";
-        document.getElementById("api-status").textContent = "api online";
-        // Get article count
-        const nr = await fetch(`${API_BASE}/admin/stats`).catch(() => null);
-        if (nr && nr.ok) {
-          const d = await nr.json();
-          document.getElementById("article-count").textContent = `${d.total_articles.toLocaleString()} articles indexed`;
-        }
-      }
-    } catch {
-      document.getElementById("api-status").textContent = "api unreachable";
-    }
-  }
-
-  checkHealth();
-
-  async function doSearch() {
-    const keyword = document.getElementById("keyword-input").value.trim();
-    const selectedSources = [...document.querySelectorAll(".source-label input:checked")].map(c => c.value);
-    const errorBox = document.getElementById("error-box");
-    const loadingBar = document.getElementById("loading-bar");
-    const loadingText = document.getElementById("loading-text");
-    const resultsArea = document.getElementById("results-area");
-
-    errorBox.innerHTML = "";
-    loadingBar.classList.add("active");
-    loadingText.classList.add("active");
-    resultsArea.innerHTML = "";
-    document.getElementById("search-btn").disabled = true;
-
-    try {
-      const res = await fetch(`${API_BASE}/news?limit=1000`);
-      if (!res.ok) throw new Error(`Server returned ${res.status}`);
-      const all = await res.json();
-
-      const kwList = keyword.split(",").map(k => k.trim().toLowerCase()).filter(Boolean);
-      const isWildcard = kwList.includes("*");
-
-      const filtered = all.filter(r => {
-        const matchKw = isWildcard || kwList.some(kw =>
-          r.title?.toLowerCase().includes(kw) ||
-          (r.snippet || "").toLowerCase().includes(kw)
-        );
-        const matchSrc = selectedSources.some(s => r.source?.includes(s));
-        return matchKw && matchSrc;
+    // Build source checkboxes
+    const groupsEl = document.getElementById("source-groups");
+    for (const [cat, sources] of Object.entries(sourceGroups)) {
+      const wrapper = document.createElement("div");
+      const heading = document.createElement("h3");
+      heading.className = "source-group";
+      heading.textContent = cat;
+      wrapper.appendChild(heading);
+      const grid = document.createElement("div");
+      grid.className = "source-grid";
+      sources.forEach(s => {
+        const label = document.createElement("label");
+        label.innerHTML = `<input type="checkbox" name="sources" value="${s}" onchange="checkCheckboxes()" checked> ${s}`;
+        grid.appendChild(label);
       });
-
-      filtered.sort((a, b) => (parseInt(b.epoch) || 0) - (parseInt(a.epoch) || 0));
-
-      loadingBar.classList.remove("active");
-      loadingText.classList.remove("active");
-
-      // Results header
-      const header = document.createElement("div");
-      header.className = "results-header";
-      header.innerHTML = `
-        <div class="results-count">found <span>${filtered.length}</span> results</div>
-        <div class="results-keywords">query: <em>${keyword}</em></div>
-      `;
-      resultsArea.appendChild(header);
-
-      if (filtered.length === 0) {
-        const empty = document.createElement("div");
-        empty.className = "empty-state";
-        empty.innerHTML = `<div class="big">◌</div>no results found for <em style="color:var(--red)">${keyword}</em>`;
-        resultsArea.appendChild(empty);
-      } else {
-        const grid = document.createElement("div");
-        grid.className = "results-grid";
-        filtered.forEach(article => {
-          const card = document.createElement("div");
-          card.className = "article-card";
-          card.innerHTML = `
-            <div class="card-meta">
-              <span class="card-source">${article.source || ''}</span>
-              <span class="card-date">${article.date || ''}</span>
-            </div>
-            <div class="card-title">${article.title || ''}</div>
-            <div class="card-snippet">${article.snippet || ''}</div>
-            <a class="card-link" href="${article.url}" target="_blank" rel="noopener">read article →</a>
-          `;
-          grid.appendChild(card);
-        });
-        resultsArea.appendChild(grid);
-      }
-
-    } catch (e) {
-      loadingBar.classList.remove("active");
-      loadingText.classList.remove("active");
-      errorBox.innerHTML = `<div class="error-box">// error: ${e.message}</div>`;
+      wrapper.appendChild(grid);
+      groupsEl.appendChild(wrapper);
     }
 
-    document.getElementById("search-btn").disabled = false;
-  }
+    function updateSearchBtn() {
+      const kw = document.getElementById("keyword-input").value.trim();
+      const anySource = [...document.querySelectorAll('input[name="sources"]')].some(c => c.checked);
+      document.getElementById("search-button").disabled = !kw || !anySource;
+    }
 
-  // Allow enter key to search
-  document.getElementById("keyword-input").addEventListener("keydown", e => {
-    if (e.key === "Enter" && !document.getElementById("search-btn").disabled) doSearch();
-  });
-</script>
+    function checkCheckboxes() { updateSearchBtn(); }
+
+    function toggleAll() {
+      const cbs = document.querySelectorAll('input[name="sources"]');
+      const allChecked = [...cbs].every(c => c.checked);
+      cbs.forEach(c => c.checked = !allChecked);
+      updateSearchBtn();
+    }
+
+    async function doSearch() {
+      const keyword = document.getElementById("keyword-input").value.trim();
+      const selectedSources = [...document.querySelectorAll('input[name="sources"]:checked')].map(c => c.value);
+      const btn = document.getElementById("search-button");
+      const loading = document.getElementById("loading");
+      const errorBox = document.getElementById("error-box");
+      const resultsArea = document.getElementById("results-area");
+      const resultsHeader = document.getElementById("results-header");
+
+      errorBox.innerHTML = "";
+      resultsArea.innerHTML = "";
+      resultsHeader.innerHTML = "";
+      btn.classList.add("loading");
+      loading.style.display = "block";
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`${API_BASE}/news?limit=1000`);
+        if (!res.ok) throw new Error(`Server returned ${res.status}`);
+        const all = await res.json();
+
+        const kwList = keyword.split(",").map(k => k.trim().toLowerCase()).filter(Boolean);
+        const isWildcard = kwList.includes("*");
+
+        const filtered = all.filter(r => {
+          const matchKw = isWildcard || kwList.some(kw =>
+            r.title?.toLowerCase().includes(kw) ||
+            (r.snippet || "").toLowerCase().includes(kw)
+          );
+          const matchSrc = selectedSources.some(s => r.source?.includes(s));
+          return matchKw && matchSrc;
+        });
+
+        filtered.sort((a, b) => (parseInt(b.epoch) || 0) - (parseInt(a.epoch) || 0));
+
+        loading.style.display = "none";
+        btn.classList.remove("loading");
+
+        resultsHeader.innerHTML = `
+          <h3 style="margin-bottom:0">Found ${filtered.length} results matching your keywords:</h3>
+          <p style="margin-top:0;padding-top:0">${keyword}</p>
+        `;
+
+        if (filtered.length === 0) {
+          resultsArea.innerHTML = `<p style="color:#aaa;text-align:center;margin-top:2em">No results found for <strong>${keyword}</strong>.</p>`;
+        } else {
+          const grid = document.createElement("div");
+          grid.className = "results";
+          filtered.forEach(article => {
+            const card = document.createElement("div");
+            card.className = "article-card";
+            card.innerHTML = `
+              <h2>${article.title || ''}</h2>
+              <p>${article.date || ''}</p>
+              <p>${article.snippet || ''}</p>
+              <a href="${article.url}" target="_blank" rel="noopener">Read more →</a>
+            `;
+            grid.appendChild(card);
+          });
+          resultsArea.appendChild(grid);
+        }
+
+      } catch (e) {
+        loading.style.display = "none";
+        btn.classList.remove("loading");
+        errorBox.innerHTML = `<div class="error-box">Could not connect to server: ${e.message}</div>`;
+      }
+
+      btn.disabled = false;
+    }
+
+    document.getElementById("keyword-input").addEventListener("keydown", e => {
+      if (e.key === "Enter" && !document.getElementById("search-button").disabled) doSearch();
+    });
+  </script>
 </body>
 </html>
