@@ -2,6 +2,12 @@
 
 **CyberPulse** is a web-based tool for tracking and aggregating high-signal cybersecurity news and alerts from over 40 of the most trusted public sources. Whether you're a researcher, analyst, or just staying informed, CyberPulse helps you quickly discover the latest cyber threats, breaches, vulnerabilities, and more—all in one place.
 
+## 📸 Screenshot
+
+![screenshot](static/Screenshot-1.png)
+
+![screenshot](static/Screenshot-2.png)
+
 ## 🔍 Features
 
 - **Keyword Search**: Enter search terms (e.g. `ransomware`, `APT`, `malware finance`) to filter news articles by relevance.
